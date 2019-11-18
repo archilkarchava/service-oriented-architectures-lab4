@@ -4,7 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
+import { ItemTypesModule } from './item-types/item-types.module';
+import { ItemsModule } from './items/items.module';
+import { LocationsModule } from './locations/locations.module';
+import { MessagesModule } from './messages/messages.module';
 import { PhotosModule } from './photos/photos.module';
+import { PlayersModule } from './players/players.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -29,6 +34,11 @@ import { UsersModule } from './users/users.module';
     PhotosModule,
     AuthModule,
     UsersModule,
+    PlayersModule,
+    LocationsModule,
+    ItemsModule,
+    ItemTypesModule,
+    MessagesModule,
   ],
 })
 export class AppModule {}

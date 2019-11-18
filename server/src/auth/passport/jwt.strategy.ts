@@ -18,8 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(req: any): Promise<UserDto> {
-    const user = await this.jwtService.validateUser(req);
+  async validate(userReq: UserDto): Promise<UserDto> {
+    const user = await this.jwtService.validateUser(userReq);
     if (!user) {
       throw new UnauthorizedException();
     }

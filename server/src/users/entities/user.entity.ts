@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { PlayerEntity } from '../../players/entities/player.entity';
 
 @Entity()
 export class UserEntity {
@@ -10,4 +11,10 @@ export class UserEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(
+    type => PlayerEntity,
+    player => player.user,
+  )
+  characters: PlayerEntity[];
 }
