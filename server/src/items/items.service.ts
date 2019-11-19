@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { ItemTypeEntity } from '../item-types/entities/item-type.entity';
 import { PlayerEntity } from '../players/entities/player.entity';
 import { UserDto } from '../users/dto/user.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 import { ItemEntity } from './entities/item.entity';
 
 @Injectable()
@@ -58,6 +59,25 @@ export class ItemsService {
     } as ItemEntity;
     return await this.itemsRepository.save(newItem);
   }
+
+  async updateForPlayer(
+    playerId: number,
+    itemId: number,
+    updateItemDto: UpdateItemDto,
+  ) {
+    console.log(updateItemDto);
+    const updateQuery = await this.itemsRepository.update(
+      { id: itemId, owner: { id: playerId } },
+      updateItemDto,
+    );
+    if (updateQuery.affected === 0) {
+      throw new BadRequestException(
+        `item with id ${itemId} does not exist or does not belong to the player with id ${playerId}`,
+      );
+    }
+    return 'success';
+  }
+
   async deleteFromPlayer(
     playerId: number,
     itemId: number,
@@ -66,6 +86,11 @@ export class ItemsService {
     const player = await this.playersRepository.findOne(playerId, {
       relations: ['user'],
     });
+    if (!player) {
+      throw new BadRequestException(
+        `player with id ${playerId} does not exist`,
+      );
+    }
     if (user.id === player.user.id || user.roles.includes('admin')) {
       const deleteQuery = await this.itemsRepository.delete({
         id: itemId,

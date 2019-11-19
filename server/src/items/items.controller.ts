@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -11,6 +13,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { UserDto } from '../users/dto/user.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 import { ItemsService } from './items.service';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -37,9 +40,23 @@ export class ItemsController {
   @Post(':itemTypeId')
   async add(
     @Param('playerId') playerId: number,
-    @Param('itemTypeId') itemId: number,
+    @Param('itemTypeId') itemTypeId: number,
   ) {
-    return await this.itemsService.addForPlayer(playerId, itemId);
+    return await this.itemsService.addForPlayer(playerId, itemTypeId);
+  }
+
+  @Roles('admin')
+  @Put(':itemId')
+  async update(
+    @Param('playerId') playerId: number,
+    @Param('itemId') itemId: number,
+    @Body() updateItemDto: UpdateItemDto,
+  ) {
+    return await this.itemsService.updateForPlayer(
+      playerId,
+      itemId,
+      updateItemDto,
+    );
   }
 
   @Roles('admin', 'user')
