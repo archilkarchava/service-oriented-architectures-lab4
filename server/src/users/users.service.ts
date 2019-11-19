@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as argon2 from 'argon2';
 import { Repository } from 'typeorm';
@@ -12,22 +12,21 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
-  async findByUsername(username: string): Promise<UserEntity> {
-    const user = await this.usersRepository.findOne({ where: { username } });
+  async findByEmail(email: string): Promise<UserEntity> {
+    const user = await this.usersRepository.findOne({ where: { email } });
     return user;
   }
 
   async createNewUser(newUser: CreateUserDto): Promise<UserEntity> {
-    if (newUser.username && newUser.password) {
-      const userRegistered = await this.findByUsername(newUser.username);
-      if (!userRegistered) {
-        newUser.password = await argon2.hash(newUser.password);
-        return await this.usersRepository.save(newUser);
-      } else {
-        throw new ForbiddenException('User already registered.');
-      }
+    const userRegistered = await this.findByEmail(newUser.email);
+    if (!userRegistered) {
+      newUser.password = await argon2.hash(newUser.password);
+      return await this.usersRepository.save({
+        ...newUser,
+        ...{ roles: ['user'] },
+      });
     } else {
-      throw new ForbiddenException('Missing mandatory parameters.');
+      throw new ConflictException('User with this email already exists.');
     }
   }
 

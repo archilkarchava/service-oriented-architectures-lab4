@@ -10,18 +10,18 @@ import { LocationEntity } from '../../locations/entities/location.entity';
 import { MessageEntity } from '../../messages/entities/message.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 
-@Entity()
+@Entity({ name: 'player' })
 export class PlayerEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column()
   playerClass: 'Knight' | 'Wizard' | 'Thief' | 'Paladin';
 
-  @Column()
+  @Column('int')
   level: number;
 
   @ManyToOne(

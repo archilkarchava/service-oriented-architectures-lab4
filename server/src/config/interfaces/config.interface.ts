@@ -18,7 +18,7 @@ export class Config {
     this.DATABASE_PORT = Number(fromDotEnvFile.DATABASE_PORT);
     this.JWT_SECRET = fromDotEnvFile.JWT_SECRET;
   }
-  @Matches(/development|production|test|provision/)
+  @Matches(/\bdevelopment\b|\bproduction\b|\btest\b|\bprovision\b/)
   readonly NODE_ENV: 'development' | 'production' | 'test' | 'provision';
   @IsInt()
   readonly PORT: number;

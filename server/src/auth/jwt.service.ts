@@ -11,10 +11,10 @@ export class JwtService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createToken(id: number, username: string) {
+  async createToken(email: string, roles: string[]) {
     const expiresIn = '7 days';
     const secret = this.configService.JWT_SECRET;
-    const userInfo: UserDto = { id, username };
+    const userInfo = { email, roles };
     const token = jwt.sign(userInfo, secret, { expiresIn });
     return {
       expires_in: expiresIn,
@@ -23,9 +23,7 @@ export class JwtService {
   }
 
   async validateUser(signedUser: UserDto): Promise<UserDto> {
-    const userFromDb = await this.usersService.findByUsername(
-      signedUser.username,
-    );
+    const userFromDb = await this.usersService.findByEmail(signedUser.email);
     if (userFromDb) {
       return new UserDto(userFromDb);
     }

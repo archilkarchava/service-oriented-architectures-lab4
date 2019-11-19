@@ -3,8 +3,13 @@ import { UserEntity } from '../entities/user.entity';
 export class UserDto {
   constructor(userEntity: UserEntity) {
     this.id = userEntity.id;
-    this.username = userEntity.username;
+    this.email = userEntity.email;
+    this.roles = userEntity.roles;
   }
-  id: number;
-  username: string;
+  readonly id: number;
+
+  // @IsEmail()
+  readonly email: string;
+
+  readonly roles: string[];
 }

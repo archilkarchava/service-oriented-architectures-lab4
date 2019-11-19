@@ -24,6 +24,7 @@ export class ConfigService implements Config {
 
   private validateInput(envConfig: Config) {
     const errors = validateSync(envConfig);
+    // TODO: pretty error formatting
     if (errors.length > 0) {
       throw errors;
     }

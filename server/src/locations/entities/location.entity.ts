@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { PlayerEntity } from '../../players/entities/player.entity';
 
-@Entity()
+@Entity({ name: 'location' })
 export class LocationEntity {
   @PrimaryColumn({ length: 10 })
   locationId: string;

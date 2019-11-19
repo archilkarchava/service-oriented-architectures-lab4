@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { PlayerEntity } from '../../players/entities/player.entity';
 
-@Entity()
+@Entity({ name: 'message' })
 export class MessageEntity {
   @PrimaryGeneratedColumn()
   messageId: number;

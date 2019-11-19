@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
@@ -8,6 +8,7 @@ import { ConfigService } from './config/config.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   const configService: ConfigService = app.get(ConfigService);
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(helmet());
   app.use(
     rateLimit({

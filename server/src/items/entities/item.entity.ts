@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ItemTypeEntity } from '../../item-types/entities/item-type.entity';
 import { PlayerEntity } from '../../players/entities/player.entity';
 
-@Entity()
+@Entity({ name: 'item' })
 export class ItemEntity {
   @PrimaryGeneratedColumn()
   id: number;

@@ -11,8 +11,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateLogin(username: string, pass: string) {
-    const userFromDb = await this.usersService.findByUsername(username);
+  async validateLogin(email: string, pass: string) {
+    const userFromDb = await this.usersService.findByEmail(email);
     if (!userFromDb) {
       // throw new NotFoundException('User not found.');
       throw new UnauthorizedException('Login error');
@@ -22,8 +22,8 @@ export class AuthService {
 
     if (isValidPass) {
       const accessToken = await this.jwtService.createToken(
-        userFromDb.id,
-        userFromDb.username,
+        userFromDb.email,
+        userFromDb.roles,
       );
       return { token: accessToken, user: new UserDto(userFromDb) };
     } else {

@@ -8,9 +8,12 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(':username')
-  async findById(@Param('username') username: string): Promise<UserDto> {
-    const user = await this.usersService.findByUsername(username);
-    return new UserDto(user);
+  @Get(':email')
+  async findByEmail(@Param('email') email: string): Promise<UserDto> {
+    const user = await this.usersService.findByEmail(email);
+    // if (!user) {
+    //   throw new NotFoundException();
+    // }
+    return user && new UserDto(user);
   }
 }
