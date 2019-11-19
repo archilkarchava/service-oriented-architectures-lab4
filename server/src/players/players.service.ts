@@ -20,13 +20,13 @@ export class PlayersService {
 
   async findAll(): Promise<PlayerEntity[]> {
     return await this.playersRepository.find({
-      relations: ['items', 'user'],
+      relations: ['items', 'items.itemType'],
     });
   }
 
   async findOne(id: number): Promise<PlayerEntity> {
     return await this.playersRepository.findOne(id, {
-      relations: ['items', 'user'],
+      relations: ['items', 'items.itemType'],
     });
   }
 

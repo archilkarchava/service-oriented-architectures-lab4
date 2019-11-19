@@ -9,7 +9,7 @@ export class PlayerDto {
     this.playerClass = playerEntity.playerClass;
     this.level = playerEntity.level;
     this.items = playerEntity.items;
-    this.user = new UserDto(playerEntity.user);
+    this.user = playerEntity.user && new UserDto(playerEntity.user);
   }
   readonly id: number;
 
