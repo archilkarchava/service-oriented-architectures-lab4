@@ -1,6 +1,6 @@
 import { IsInt } from 'class-validator';
 
-export class ItemTypeDto {
+export class ItemTypeItemDto {
   @IsInt()
   readonly id;
 }

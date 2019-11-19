@@ -5,14 +5,14 @@ import {
   IsOptional,
   ValidateNested,
 } from 'class-validator';
-import { ItemTypeDto } from '../../item-types/dto/item-type.dto';
+import { ItemTypeItemDto } from './item-type-item.dto';
 
 export class UpdateItemDto {
   @IsOptional()
   @IsNotEmptyObject()
   @ValidateNested()
-  @Type(() => ItemTypeDto)
-  readonly itemType: ItemTypeDto;
+  @Type(() => ItemTypeItemDto)
+  readonly itemType: ItemTypeItemDto;
 
   @IsOptional()
   @IsInt()
