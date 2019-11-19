@@ -12,7 +12,7 @@ export class JwtService {
   ) {}
 
   async createToken(email: string, roles: string[]) {
-    const expiresIn = '7 days';
+    const expiresIn = '3 days';
     const secret = this.configService.JWT_SECRET;
     const userInfo = { email, roles };
     const token = jwt.sign(userInfo, secret, { expiresIn });
