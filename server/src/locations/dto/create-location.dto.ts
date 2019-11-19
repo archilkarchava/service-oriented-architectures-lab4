@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsString, Matches, ValidateNested } from 'class-validator';
-import { PlayerDto } from '../../players/dto/player.dto';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
-export class LocationDto {
+export class CreateLocationDto {
   @IsNotEmpty()
   @IsString()
   readonly locationId: string;
@@ -12,7 +11,4 @@ export class LocationDto {
 
   @Matches(/\bForest\b|\bDesert\b|\bDungeon\b|\bRiver\b|\bOcean\b/)
   readonly locationType: 'Forest' | 'Desert' | 'Dungeon' | 'River' | 'Ocean';
-
-  @ValidateNested({ each: true })
-  readonly players: PlayerDto[];
 }

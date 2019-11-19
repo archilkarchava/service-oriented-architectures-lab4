@@ -7,8 +7,7 @@ import {
   Matches,
   ValidateNested,
 } from 'class-validator';
-import { ItemEntity } from '../../items/entities/item.entity';
-import { UpdateLocationDto } from '../../locations/dto/update-location.dto';
+import { UpdatePlayerPositionDto } from './update-player-position.dto';
 
 export class UpdatePlayerDto {
   @IsNotEmpty()
@@ -23,10 +22,10 @@ export class UpdatePlayerDto {
   readonly level: number;
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocationDto)
-  readonly position: UpdateLocationDto;
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => ItemEntity)
-  readonly items: ItemEntity[];
+  @Type(() => UpdatePlayerPositionDto)
+  readonly position: UpdatePlayerPositionDto;
+  // @IsOptional()
+  // @ValidateNested({ each: true })
+  // @Type(() => ItemEntity)
+  // readonly items: ItemEntity[];
 }

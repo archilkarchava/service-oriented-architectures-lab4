@@ -1,4 +1,5 @@
 import { ItemEntity } from '../../items/entities/item.entity';
+import { LocationEntity } from '../../locations/entities/location.entity';
 import { UserDto } from '../../users/dto/user.dto';
 import { PlayerEntity } from '../entities/player.entity';
 
@@ -9,6 +10,7 @@ export class PlayerDto {
     this.playerClass = playerEntity.playerClass;
     this.level = playerEntity.level;
     this.items = playerEntity.items;
+    this.position = playerEntity.position;
     this.user = playerEntity.user && new UserDto(playerEntity.user);
   }
   readonly id: number;
@@ -25,6 +27,8 @@ export class PlayerDto {
 
   // @IsArray()
   readonly items: ItemEntity[];
+
+  readonly position: LocationEntity;
 
   readonly user: UserDto;
 }

@@ -65,7 +65,6 @@ export class ItemsService {
     itemId: number,
     updateItemDto: UpdateItemDto,
   ) {
-    console.log(updateItemDto);
     const updateQuery = await this.itemsRepository.update(
       { id: itemId, owner: { id: playerId } },
       updateItemDto,

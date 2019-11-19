@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LocationEntity } from '../locations/entities/location.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -16,17 +17,19 @@ export class PlayersService {
   constructor(
     @InjectRepository(PlayerEntity)
     private readonly playersRepository: Repository<PlayerEntity>,
+    @InjectRepository(LocationEntity)
+    private readonly locationsRepository: Repository<LocationEntity>,
   ) {}
 
   async findAll(): Promise<PlayerEntity[]> {
     return await this.playersRepository.find({
-      relations: ['items', 'items.itemType'],
+      relations: ['items', 'items.itemType', 'position'],
     });
   }
 
   async findOne(id: number): Promise<PlayerEntity> {
     return await this.playersRepository.findOne(id, {
-      relations: ['items', 'items.itemType'],
+      relations: ['items', 'items.itemType', 'position'],
     });
   }
 
@@ -59,6 +62,17 @@ export class PlayersService {
     });
     if (!player) {
       throw new BadRequestException(`player with id ${id} does not exist`);
+    }
+    if (updatePlayerDto.position) {
+      const updatedLocationId = updatePlayerDto.position.locationId;
+      const loctionExists = await this.locationsRepository.findOne(
+        updatedLocationId,
+      );
+      if (!loctionExists) {
+        throw new BadRequestException(
+          `location with id ${updatedLocationId} does not exist`,
+        );
+      }
     }
     const updatedPlayer = {
       ...player,
