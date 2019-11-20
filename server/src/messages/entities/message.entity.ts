@@ -20,4 +20,10 @@ export class MessageEntity {
 
   @Column({ length: 1000 })
   messageText: string;
+
+  @Column({ default: false })
+  deletedBySender: boolean;
+
+  @Column({ default: false })
+  deletedByReceiver: boolean;
 }
