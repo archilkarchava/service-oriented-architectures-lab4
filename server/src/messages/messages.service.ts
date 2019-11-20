@@ -19,11 +19,17 @@ export class MessagesService {
     private readonly playersRepository: Repository<PlayerEntity>,
   ) {}
 
-  private async playerBelongsToUser(playerId, userId): Promise<boolean> {
+  private async playerBelongsToUserOrPlayerIsAdmin(
+    playerId: number,
+    user: UserDto,
+  ): Promise<boolean> {
     const currentPlayer = await this.playersRepository.findOne(playerId, {
       relations: ['user'],
     });
-    if (currentPlayer && userId === currentPlayer.user.id) {
+    if (
+      (currentPlayer && user.id === currentPlayer.user.id) ||
+      user.roles.includes('admin')
+    ) {
       return true;
     }
     return false;
@@ -33,7 +39,7 @@ export class MessagesService {
     user: UserDto,
     playerId: number,
   ): Promise<MessageEntity[]> {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       return await this.messagesRepository.find({
         where: { playerTo: { id: playerId }, deletedByReceiver: false },
         relations: ['playerFrom'],
@@ -47,7 +53,7 @@ export class MessagesService {
     playerId: number,
     messageId: number,
   ): Promise<MessageEntity> {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       return await this.messagesRepository.findOne(messageId, {
         where: { playerTo: { id: playerId }, deletedByReceiver: false },
         relations: ['playerFrom'],
@@ -57,7 +63,7 @@ export class MessagesService {
   }
 
   async findAllSent(user: UserDto, playerId: number): Promise<MessageEntity[]> {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       return await this.messagesRepository.find({
         where: { playerFrom: { id: playerId }, deletedBySender: false },
         relations: ['playerTo'],
@@ -71,7 +77,7 @@ export class MessagesService {
     playerId: number,
     messageId: number,
   ): Promise<MessageEntity> {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       return await this.messagesRepository.findOne(messageId, {
         where: { playerFrom: { id: playerId }, deletedBySender: false },
         relations: ['playerTo'],
@@ -81,10 +87,10 @@ export class MessagesService {
   }
 
   async send(user: UserDto, playerId: number, sendMessageDto: SendMessageDto) {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       const message = {
         ...sendMessageDto,
-        playerFrom: { id: playerId },
+        playerFrom: { id: Number(playerId) },
       } as MessageEntity;
       return await this.messagesRepository.save(message);
     }
@@ -96,7 +102,7 @@ export class MessagesService {
     playerId: number,
     messageId: number,
   ): Promise<string> {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       const message = await this.messagesRepository.findOne(messageId);
       if (!message) {
         throw new BadRequestException(
@@ -136,7 +142,7 @@ export class MessagesService {
     playerId: number,
     messageId: number,
   ): Promise<string> {
-    if (this.playerBelongsToUser(playerId, user.id)) {
+    if (await this.playerBelongsToUserOrPlayerIsAdmin(playerId, user)) {
       const message = await this.messagesRepository.findOne(messageId);
       if (!message) {
         throw new BadRequestException(

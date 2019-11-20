@@ -81,7 +81,9 @@ export class MessagesController {
     @Param('playerId') playerId: number,
     @Body() sendMessageDto: SendMessageDto,
   ) {
-    return await this.messagesService.send(user, playerId, sendMessageDto);
+    return new MessageDto(
+      await this.messagesService.send(user, playerId, sendMessageDto),
+    );
   }
 
   @Roles('admin', 'user')
